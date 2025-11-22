@@ -10,6 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TournamentsIndexRouteImport } from './routes/tournaments/index'
+import { Route as PlayersIndexRouteImport } from './routes/players/index'
+import { Route as TournamentsNewRouteImport } from './routes/tournaments/new'
+import { Route as TournamentsTournamentIdRouteImport } from './routes/tournaments/$tournamentId'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
@@ -17,6 +21,26 @@ import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TournamentsIndexRoute = TournamentsIndexRouteImport.update({
+  id: '/tournaments/',
+  path: '/tournaments/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlayersIndexRoute = PlayersIndexRouteImport.update({
+  id: '/players/',
+  path: '/players/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TournamentsNewRoute = TournamentsNewRouteImport.update({
+  id: '/tournaments/new',
+  path: '/tournaments/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TournamentsTournamentIdRoute = TournamentsTournamentIdRouteImport.update({
+  id: '/tournaments/$tournamentId',
+  path: '/tournaments/$tournamentId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
@@ -39,12 +63,20 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/tournaments/$tournamentId': typeof TournamentsTournamentIdRoute
+  '/tournaments/new': typeof TournamentsNewRoute
+  '/players': typeof PlayersIndexRoute
+  '/tournaments': typeof TournamentsIndexRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/tournaments/$tournamentId': typeof TournamentsTournamentIdRoute
+  '/tournaments/new': typeof TournamentsNewRoute
+  '/players': typeof PlayersIndexRoute
+  '/tournaments': typeof TournamentsIndexRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
 }
 export interface FileRoutesById {
@@ -52,20 +84,53 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/tournaments/$tournamentId': typeof TournamentsTournamentIdRoute
+  '/tournaments/new': typeof TournamentsNewRoute
+  '/players/': typeof PlayersIndexRoute
+  '/tournaments/': typeof TournamentsIndexRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth/login' | '/auth/register' | '/api/trpc/$'
+  fullPaths:
+    | '/'
+    | '/auth/login'
+    | '/auth/register'
+    | '/tournaments/$tournamentId'
+    | '/tournaments/new'
+    | '/players'
+    | '/tournaments'
+    | '/api/trpc/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth/login' | '/auth/register' | '/api/trpc/$'
-  id: '__root__' | '/' | '/auth/login' | '/auth/register' | '/api/trpc/$'
+  to:
+    | '/'
+    | '/auth/login'
+    | '/auth/register'
+    | '/tournaments/$tournamentId'
+    | '/tournaments/new'
+    | '/players'
+    | '/tournaments'
+    | '/api/trpc/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth/login'
+    | '/auth/register'
+    | '/tournaments/$tournamentId'
+    | '/tournaments/new'
+    | '/players/'
+    | '/tournaments/'
+    | '/api/trpc/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  TournamentsTournamentIdRoute: typeof TournamentsTournamentIdRoute
+  TournamentsNewRoute: typeof TournamentsNewRoute
+  PlayersIndexRoute: typeof PlayersIndexRoute
+  TournamentsIndexRoute: typeof TournamentsIndexRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
 }
 
@@ -76,6 +141,34 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tournaments/': {
+      id: '/tournaments/'
+      path: '/tournaments'
+      fullPath: '/tournaments'
+      preLoaderRoute: typeof TournamentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/players/': {
+      id: '/players/'
+      path: '/players'
+      fullPath: '/players'
+      preLoaderRoute: typeof PlayersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tournaments/new': {
+      id: '/tournaments/new'
+      path: '/tournaments/new'
+      fullPath: '/tournaments/new'
+      preLoaderRoute: typeof TournamentsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tournaments/$tournamentId': {
+      id: '/tournaments/$tournamentId'
+      path: '/tournaments/$tournamentId'
+      fullPath: '/tournaments/$tournamentId'
+      preLoaderRoute: typeof TournamentsTournamentIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/register': {
@@ -106,6 +199,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  TournamentsTournamentIdRoute: TournamentsTournamentIdRoute,
+  TournamentsNewRoute: TournamentsNewRoute,
+  PlayersIndexRoute: PlayersIndexRoute,
+  TournamentsIndexRoute: TournamentsIndexRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 import { useState } from "react";
-import { Home, Menu, X, LogIn, LogOut } from "lucide-react";
+import { Home, Menu, X, LogIn, LogOut, Trophy, Users } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "./ui/button";
 
@@ -69,6 +69,32 @@ export default function Header() {
           >
             <Home size={20} />
             <span className="font-medium">Home</span>
+          </Link>
+
+          <Link
+            to="/tournaments"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            activeProps={{
+              className:
+                "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
+            }}
+          >
+            <Trophy size={20} />
+            <span className="font-medium">Turneringer</span>
+          </Link>
+
+          <Link
+            to="/players"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            activeProps={{
+              className:
+                "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
+            }}
+          >
+            <Users size={20} />
+            <span className="font-medium">Spillere</span>
           </Link>
         </nav>
 

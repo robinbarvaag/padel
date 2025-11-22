@@ -70,10 +70,12 @@ export const verification = pgTable("verification", {
 
 export const player = pgTable("player", {
   id: uuid("id").primaryKey().defaultRandom(),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(), // Unique usernames
   email: text("email"), // Optional, for inviting/claiming
   userId: text("userId").references(() => user.id), // Linked if claimed
   createdById: text("createdById").references(() => user.id), // Who created this player (if not self-registered)
+  isPlaceholder: boolean("isPlaceholder").default(true).notNull(), // True until claimed
+  claimRequestedBy: text("claimRequestedBy").references(() => user.id), // Pending claim
   elo: integer("elo").default(1200).notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
@@ -84,6 +86,16 @@ export const tournament = pgTable("tournament", {
   name: text("name").notNull(),
   type: tournamentTypeEnum("type").notNull(),
   status: tournamentStatusEnum("status").default("DRAFT").notNull(),
+
+  // Settings
+  pointsToWin: integer("pointsToWin").default(21).notNull(), // Default 21 for Americano
+  numberOfCourts: integer("numberOfCourts").default(1).notNull(),
+  numberOfPlayers: integer("numberOfPlayers").notNull(),
+  playAllMatches: boolean("playAllMatches").default(true).notNull(), // Mexicano style
+
+  // Rules (JSON for flexibility)
+  rules: text("rules"), // Store custom rules as JSON
+
   createdById: text("createdById")
     .notNull()
     .references(() => user.id),
@@ -108,11 +120,17 @@ export const tournamentParticipant = pgTable(
 
 export const match = pgTable("match", {
   id: uuid("id").primaryKey().defaultRandom(),
-  tournamentId: uuid("tournamentId").references(() => tournament.id),
+  tournamentId: uuid("tournamentId")
+    .notNull()
+    .references(() => tournament.id),
   round: integer("round").notNull(),
+  court: integer("court"), // Which court (bane)
   team1Score: integer("team1Score"),
   team2Score: integer("team2Score"),
+  completedAt: timestamp("completedAt"),
+  lastUpdatedBy: text("lastUpdatedBy").references(() => user.id), // Track who updated
   createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
 
 export const matchParticipant = pgTable("match_participant", {
