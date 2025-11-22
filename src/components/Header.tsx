@@ -8,13 +8,13 @@ import { Button } from "./ui/button";
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = authClient.useSession();
-  const navigate = Link.useNavigate();
+  // const navigate = Link.useNavigate();
 
   const handleSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          navigate({ to: "/" });
+          // navigate({ to: "/" });
         },
       },
     });

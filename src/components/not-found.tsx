@@ -1,5 +1,3 @@
-tsx;
-
 import { Link } from "@tanstack/react-router";
 
 export function NotFound({ children }: { children?: any }) {
