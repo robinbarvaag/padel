@@ -1,132 +1,153 @@
 import { Link } from "@tanstack/react-router";
-
-import { useState } from "react";
-import { Home, Menu, X, LogIn, LogOut, Trophy, Users } from "lucide-react";
+import { Home, LogIn, LogOut, Trophy, Users } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "./ui/button";
+import { ThemeToggle } from "./theme-toggle";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from "./ui/sidebar";
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false);
   const { data: session } = authClient.useSession();
-  // const navigate = Link.useNavigate();
 
   const handleSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          // navigate({ to: "/" });
+          window.location.href = "/";
         },
       },
     });
   };
 
+  const sidebarItems = [
+    {
+      title: "Hjem",
+      icon: Home,
+      to: "/",
+    },
+    {
+      title: "Turneringer",
+      icon: Trophy,
+      to: "/tournaments",
+    },
+    {
+      title: "Spillere",
+      icon: Users,
+      to: "/players",
+    },
+  ];
+
   return (
-    <>
-      <header className="p-4 flex items-center bg-gray-800 text-white shadow-lg">
-        <button
-          onClick={() => setIsOpen(true)}
-          className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-          aria-label="Open menu"
-        >
-          <Menu size={24} />
-        </button>
-        <h1 className="ml-4 text-xl font-semibold">
-          <Link to="/">
-            <img
-              src="/tanstack-word-logo-white.svg"
-              alt="TanStack Logo"
-              className="h-10"
-            />
-          </Link>
-        </h1>
-      </header>
+    <SidebarProvider>
+      <Sidebar variant="inset" className="hidden md:flex">
+        <SidebarHeader className="border-b border-border">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton size="lg" asChild>
+                <Link to="/" className="flex items-center gap-3">
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                    <Trophy className="size-4" />
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">PADEL</span>
+                    <span className="truncate text-xs text-muted-foreground">
+                      Turnering Tracker
+                    </span>
+                  </div>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarHeader>
 
-      <aside
-        className={`fixed top-0 left-0 h-full w-80 bg-gray-900 text-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          <h2 className="text-xl font-bold">Navigation</h2>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-            aria-label="Close menu"
-          >
-            <X size={24} />
-          </button>
-        </div>
+        <SidebarContent>
+          <SidebarMenu>
+            {sidebarItems.map((item) => (
+              <SidebarMenuItem key={item.to}>
+                <SidebarMenuButton asChild>
+                  <Link
+                    to={item.to}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors"
+                    activeProps={{
+                      className: "bg-accent text-accent-foreground",
+                    }}
+                  >
+                    <item.icon className="size-4" />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarContent>
 
-        <nav className="flex-1 p-4 overflow-y-auto">
-          <Link
-            to="/"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
-            activeProps={{
-              className:
-                "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
-            }}
-          >
-            <Home size={20} />
-            <span className="font-medium">Home</span>
-          </Link>
+        <SidebarFooter className="border-t border-border">
+          <SidebarMenu>
+            {session ? (
+              <>
+                <SidebarMenuItem>
+                  <div className="px-3 py-2">
+                    <p className="text-sm font-medium text-foreground">
+                      {session.user.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {session.user.email}
+                    </p>
+                  </div>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start"
+                      onClick={handleSignOut}
+                    >
+                      <LogOut className="size-4" />
+                      <span>Logg ut</span>
+                    </Button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </>
+            ) : (
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link to="/auth/login" className="flex items-center gap-3">
+                    <LogIn className="size-4" />
+                    <span>Logg inn</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
 
-          <Link
-            to="/tournaments"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
-            activeProps={{
-              className:
-                "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
-            }}
-          >
-            <Trophy size={20} />
-            <span className="font-medium">Turneringer</span>
-          </Link>
-
-          <Link
-            to="/players"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
-            activeProps={{
-              className:
-                "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
-            }}
-          >
-            <Users size={20} />
-            <span className="font-medium">Spillere</span>
-          </Link>
-        </nav>
-
-        <div className="p-4 border-t border-gray-700">
-          {session ? (
-            <div className="flex flex-col gap-2">
-              <div className="text-sm text-gray-400 mb-2">
-                Signed in as {session.user.name}
-              </div>
-              <Button
-                variant="destructive"
-                className="w-full flex items-center gap-2"
-                onClick={handleSignOut}
-              >
-                <LogOut size={20} />
-                Sign Out
-              </Button>
+      <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background sticky top-0 z-50">
+        <div className="flex items-center gap-2 px-4 flex-1">
+          <SidebarTrigger className="-ml-1 md:hidden" />
+          <div className="flex items-center gap-2">
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <Trophy className="size-4" />
             </div>
-          ) : (
-            <Link
-              to="/auth/login"
-              onClick={() => setIsOpen(false)}
-              className="w-full"
-            >
-              <Button className="w-full flex items-center gap-2">
-                <LogIn size={20} />
-                Sign In
-              </Button>
-            </Link>
-          )}
+            <h1 className="text-lg font-semibold hidden sm:block">
+              PADEL Tracker
+            </h1>
+            <h1 className="text-lg font-semibold sm:hidden">PADEL</h1>
+          </div>
         </div>
-      </aside>
-    </>
+        <div className="px-4">
+          <ThemeToggle />
+        </div>
+      </header>
+    </SidebarProvider>
   );
 }

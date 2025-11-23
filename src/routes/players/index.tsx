@@ -9,14 +9,7 @@ import {
 } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import {
-  User,
-  UserPlus,
-  Trophy,
-  Mail,
-  CheckCircle2,
-  Clock,
-} from "lucide-react";
+import { User, UserPlus, Mail, CheckCircle2, Clock } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/players/")({

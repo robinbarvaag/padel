@@ -1,0 +1,23 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { createAPIFileRoute } from "@tanstack/start/api";
+import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+import { appRouter } from "../../../server/trpc/router";
+
+export const Route = createAPIFileRoute("/api/trpc/$")({
+  GET: ({ request }) => {
+    return fetchRequestHandler({
+      endpoint: "/api/trpc",
+      req: request,
+      router: appRouter,
+      createContext: () => ({}),
+    });
+  },
+  POST: ({ request }) => {
+    return fetchRequestHandler({
+      endpoint: "/api/trpc",
+      req: request,
+      router: appRouter,
+      createContext: () => ({}),
+    });
+  },
+});

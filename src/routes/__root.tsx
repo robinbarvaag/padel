@@ -2,7 +2,7 @@ import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import * as React from "react";
 
-import Header from "../components/Header";
+import { DashboardLayout } from "../components/layout/DashboardLayout";
 import { TRPCProvider } from "../lib/trpc";
 import "../styles.css";
 
@@ -32,8 +32,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <TRPCProvider>
-          <Header />
-          {children}
+          <DashboardLayout>{children}</DashboardLayout>
           <TanStackRouterDevtools position="bottom-right" />
         </TRPCProvider>
         <Scripts />
